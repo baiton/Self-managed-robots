@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    <header>
+      <ul class="nav nav-pills">
+        <li class="active"><a href="/">Home</a></li>
+        <li><a href="/unemployedbots">Unemployed</a></li>
+        <li><a href="/employedbots">Employed</a></li>
+      </ul>
+    </header>
+    <div class="container">
+      {{#robots}}
+        {{>robot}}
+      {{/robots}}
+      {{^robots}}
+         <p>sorry no robots</p>
+      {{/robots}}
+    </div>
+  </body>
+</html>

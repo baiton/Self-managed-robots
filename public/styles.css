@@ -1,0 +1,96 @@
+body{
+  background-color: white;
+  margin: 10px;
+}
+
+header{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+div>div{
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  background-color: white;
+  width: 20%;
+  margin-bottom: 10vh;
+  display: flex;
+  flex-direction: column;
+
+}
+
+p{
+  text-align: center;
+}
+
+h1{
+  text-align: center;
+  color: #26A9E0;
+}
+
+span{
+  text-align: center;
+  color:#EC1A23;
+}
+
+.container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+img{
+  width: fit-content;
+  margin: auto;
+}
+
+#circle-photo{
+  border-radius: 100%;
+  border: 1px solid gray;
+  width: 16%;
+  height: inherit;
+  margin: 0;
+}
+
+.top-row{
+  margin: 50px auto;
+  display: flex;
+ width: 80%;
+justify-content: center;
+}
+
+.primary-stats{
+  width: 60%;
+}
+
+.bottom-stats{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: -50px auto;
+}
+
+ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.edu{
+  display: flex;
+  justify-content: space-around;
+  width: 50%;
+}
+
+.skills{
+  display: flex;
+  justify-content: space-around;
+  width: 47%;
+
+}
+
+h3{
+  margin: 0;
+}

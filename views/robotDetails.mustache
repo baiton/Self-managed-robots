@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="../styles.css"> {{>_head}}
+
+<body>
+  <div class="top-row">
+    <img id="circle-photo" src="{{avatar}}" alt="">
+    <section class="primary-stats">
+      <h1>{{name}}</h1>
+      <p>{{address.city}}, {{address.country}} | {{job}} {{company}}{{^company}}Available for Hire{{/company}}
+      </p>
+      <p>{{email}} | {{phone}}</p>
+    </section>
+  </div>
+  <div class="bottom-stats">
+    {{#university}}
+      <article class="edu">
+        <h3>Education</h3>
+        <ul>
+          <li>{{university}}</li>
+        </ul>
+      </article>
+    {{/university}}
+    <article class="skills">
+      <h3>Skills</h3>
+      <ul>
+        {{#skills}}
+          <li>{{.}}</li>
+        {{/skills}}
+      </ul>
+    </article>
+  </div>
+</body>
+
+</html>
