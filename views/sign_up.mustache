@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{>_head}}
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <header>
+      <ul class="nav nav-pills">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/unemployedbots">Unemployed</a></li>
+        <li><a href="/employedbots">Employed</a></li>
+      </ul>
+    </header>
+    <form id="sign-up" class="registration" action="/register" method="post">
+      <input type="text" name="username" value="" placeholder="Username">
+      <input type="password" name="password" value="" placeholder="Password">
+      <input type="password" name="passwordMatch" value="" placeholder="Re-Enter Password">
+      <button class="btn btn-secondary" type="submit" name="button">Register</button>
+    </form>
+  </body>
+</html>
