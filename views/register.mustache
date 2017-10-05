@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{>_head}}
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <header>
+      <ul class="nav nav-pills">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/register">Register</a></li>
+        <li><a href="/login">Login</a></li>
+      </ul>
+    </header>
+    <form class = "addRobotForm" action="/robots" method="POST">
+      <input type="text" name="name" placeholder="Name">
+      <input type="text" name="email" placeholder="Email">
+      <input type="text" name="university" placeholder="University">
+      <input type="text" name="job" placeholder="Job">
+      <input type="text" name="company" placeholder="Company">
+      <input type="text" name="skills" placeholder="Skills">
+      <input type="text" name="phone" placeholder="Phone number">
+      <input type="text" name="avatar" placeholder="Avatar URL">
+      <input type="text" name="address" placeholder="Address">
+      <hr>
+      <input type="text" name="username" placeholder="Username">
+      <input type="password" name="password" placeholder="Password">
+      <hr>
+      <input type="submit" name="" value="Create Your Profile!">
+      <hr>
+      <a href = "http://localhost:3000/robots">Return to home page</a>
+    </form>
+  </body>
+</html>

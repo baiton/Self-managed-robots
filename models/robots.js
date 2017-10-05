@@ -1,50 +1,58 @@
-// This should be ready
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
-
-const RobotSchema = new mongoose.Schema({
-  id: {type: String},
-  username: {type: String, require: true, index: {unique: true} },
-  password: {type: String, require: true, unique: true},
-  name: {type: String, require: true},
+const robotSchema = new mongoose.Schema({
+  name: {type: String},
+  password: {type: String},
   avatar: {type: String},
-  email: {type: String, require: true},
+  email: {type: String},
   university: {type: String},
   job: {type: String},
   company: {type: String},
-  skills: [{type: String}, {type: String}, {type: String}],
-  phone: {type: String},
-  address: {
-    street_num: {type: String},
-    street_name: {type: String},
+  skills: {type: String},
+  phone: {type: Number},
+  address: [{
+    street_num:{type: String},
+    street_name: {type: Number},
     city: {type: String},
-    state_or_province: {type: String},
-    postal_code: {type: String},
-    country: {type: String}
-    }
-  })
+    state_or_province:{type: String}
+  }],
+  username: { type: String, required: true },
+  password: { type: String, required: true }
+})
 
-RobotSchema.pre('save', function (next){
+
+robotSchema.pre('save', function (next) {
   const user = this
-  if (!user.isModified('password'))
-   next()
-  bcrypt.genSalt(10, (err, salt)=>{
-    bcrypt.hash(user.password, salt, (err,hash) =>{
+  if (!user.isModified('password')) {
+    next()
+  }
+
+  bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.hash(user.password, salt, function (err, hash) {
       user.password = hash
+      user.updated_at = new Date().toISOString()
       next()
-    });
-  });
-});
+      // console.log(password)
+      console.log('--------------' + user.password)
+    })
+  })
+})
 
-RobotSchema.methods.comparePassword = function (pass, dbPass, done) {
-  //isMatch is res and can either be true or false.  does param 1 match param 2?  true or false
-  //This comes from bcrypts built in function .compare() which takes plaintext password, hashed password and gives a funciton that errors or presents truthy/falsy
-  bcrypt.compare(pass, dbPass, (err, isMatch)=>{
-  done(err, isMatch)
-  });
-};
+robotSchema.methods.comparePassword = (pwd, dbPass, done) => {
+  // pwd = plain text
+  bcrypt.compare(pwd, dbPass, (err, isMatch) => {
+    done(err, isMatch)
+  })
+}
 
-const User = mongoose.model('User', RobotSchema) //I will make your collection but plural!
-module.exports= User;  //you are exporting the RobotSchema data in mongoose
+robotSchema.statics.findByName = function (name, cb) {
+    return this.find({ name: name })
+  }
+
+const Robots = mongoose.model('users', robotSchema)
+
+module.exports = Robots
+
+// collection: users
+// db: robots

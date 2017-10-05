@@ -1,188 +1,89 @@
 const express = require('express');
 const mustacheExpress = require('mustache-express');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 const app = express();
 const session = require('express-session')
-const bcrypt = require('bcrypt');
-const User = require('./models/robots')
-const { getBotsByUsername: getBotsByUsername,
-getAllRobots: getAllRobots,
-robots: robots,
-newProfile: newProfile,
-ensureAuthenticated: ensureAuthenticated,
-createToken: createToken,
-checkRole: checkRole } = require('./dal')
-
-// I need express-session, connect-mongo, and passport.
+const dal = require('./dal')
+// const robots =[];
+const { Strategy: LocalStrategy } = require('passport-local')
+const Robots = require('./models/robots.js')
 
 app.engine('mustache', mustacheExpress());
-app.set('views', './views');
 app.set('view engine', 'mustache');
-
+app.set('views', __dirname + '/views');
 app.use(express.static('public'));
-
-
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-  extended: false
-}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
-const saltRounds = 10;
-
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  homepage: 1,
-  cookie: {
-    secure: true
-  }
-}))
-
-
-
-app.use(function(req, res, next){
-  if(!req.session.isAuthenticated){
-    req.session.isAuthenticated = false;
-  }
-
-})
-// --------------------------------------------
-// ----------------Login-----------------------
-// --------------------------------------------
-app.get('/login', function(req, res) {
-  res.render('login')
+app.get('/', function (req, res){
+    res.redirect('./login')
 })
 
-app.post("/login", (req, res) => {
-  User.findOne({ username: req.body.username }, '+password', function (
-    err,
-    user,
-    next
-  ) {
-    if (err) return next(err)
-    if (!user) {
-      return res.status(401).send({ message: 'Wrong email and/or password' })
-    }
-    //referencing the function's parameter user
-    user.comparePassword(req.body.password, user.password, function (
-      err,
-      isMatch
-    ) {
-      console.log('is match', isMatch)
-      if (!isMatch) {
-        return res.status(401).send({ message: 'Wrong email and/or password' })
+app.get('/robots', function(req, res) {
+    const robots = dal.getRobots()
+// getAllRobots does provide response as an array of robots... but how do I use them
+    res.render('robots', { robots })
+})
+
+app.get('/robotDetail', function (req, res){
+    res.render('robotDetail')
+})
+
+app.get('/_robot/:id', function (req, res) {
+    const chosenRobot = dal.getRobot(req.params.id)
+      res.render('robotDetail', chosenRobot)
+})
+
+app.post('/_robot/:id', function (req, res){
+    res.redirect('./_robot/{{id}}')
+})
+
+app.post('/robots', function(req, res){
+    dal.addRobot(req.body.name, req.body.email, req.body.university, req.body.job, req.body.company, req.body.skills, req.body.phone, req.body.avatar, req.body.username, req.body.password);
+    console.log(req.body.password)
+    res.redirect('./robots')
+})
+
+app.get('/addrobot', function(req, res){
+    res.render('addrobot')
+})
+
+app.get('/login', function(req, res){
+    res.render('login')
+  })
+
+app.post('/login', (req, res) => {
+    Robots.findOne({ username: req.body.username }, 'username password', function (err, user, next) {
+      if (err) return next(err)
+      if (!user) {
+        console.log("user", user);
+        return res.redirect("./login")
       }
-      res.send({ token: createToken(user), roles: user.roles })
+      // user.comparePassword(req.body.password, user.password, ( err, isMatch ) => {
+      //   if (!isMatch) {
+      //     console.log("password is incorrect");
+      //     return res.redirect("./login")
+      //   }
+        // let token = { token: createToken(user)};
+        console.log("You made it!");
+        res.redirect('/robots');
+      })
     })
-  })
+  // })
+
+app.get('/editrobot/:id', function (req, res){
+    const editedRobot = dal.getRobot(req.params.id)
+    res.render('editrobot', {editedRobot})
 })
 
-
-
-
-// app.post('/logged', ((req, res) => {
-//   User.findOne({ username: req.body.username }, '+password', function (
-//     err,
-//     user,
-//     next
-//   ) {
-//     if (err) return next(err)
-//     if (!user) {
-//       return res.status(401).send({ message: 'Wrong email and/or password' })
-//     }
-//     user.comparePassword(req.body.password, user.password, function (
-//       err,
-//       isMatch
-//     ) {
-//       console.log('is match', isMatch)
-//       if (!isMatch) {
-//         return res.status(401).send({ message: 'Wrong email and/or password' })
-//       }
-//       res.send({ token: createToken(user), roles: user.roles })
-//     })
-//   })
-// }))
-//
-// app.post('/logged', function(req, res) {
-//   const hash = bcrypt.hashSync(password, 8);
-//   bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-//   // Store hash in your password DB.
-// });
-//   // getCharByUsername(req.body.username)
-//   res.redirect('/')
-// })
-
-// ------------sign-up------------------
-
-app.get("./register", (req, res) => {
-  User.find({}, (err, users) => {
-    res.send(users)
-  })
-})
-app.post("./register", (req, res) => {
-  User.findOne({ username: req.body.username }, (err, existingUser) => {
-    if (existingUser) {
-      return res.status(409).send({ message: 'Email is already taken.' })
-    }
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    })
-    user.save(() => {
-      res.send({ token: createToken(user), message: 'User has been created' })
-    })
-  })
+app.post('/editrobot/:id', (req, res) => {
+    const id = req.params.id
+    const newRobot = (req.body)
+    dal.editRobot(id, newRobot)
+    res.redirect('/robots')
+    console.log(newRobot)
 })
 
-
-
-// app.get('/register', (req, res) => {
-//   res.render('sign_up')
-// })
-//
-// app.post('/registered', (req, res) => {
-//   // newProfile(req.body).then(function(bot) {
-//     res.send('Success!');
-//   })
-
-
-
-
-
-// all bots
-app.get('/', function(req, res) {
-  // console.log(req.session)
-  robotDal.getAllRobots().then(function(bots) {
-    res.render("robots", {
-      robots: bots
-    })
-  });
+app.listen(3000, function(){
+    console.log('listening on port 3000');
 })
-//
-// 1 bot profile
-app.get('/robots/:id', function(req, res) {
-  const chosenRobot = robotDal.getRobot(parseInt(req.params.id));
-  if (chosenRobot.id) {
-    res.render('robotDetails', chosenRobot);
-  } else {
-    res.send('NO ROBOT!!!');
-  }
-})
-
-// ------------Unemployed render---------------
-app.get('/unemployedbots', function(req, res) {
-  res.render('./unemployed')
-})
-
-// ------------Employed Render-----------------
-app.get('/employedbots', function(req, res) {
-  res.render('./employed')
-})
-
-app.set('port', 3000);
-
-app.listen(3000, function() {
-  console.log('Application has started at Port 3000');
-});
