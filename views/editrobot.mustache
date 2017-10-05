@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <h1>Edit your Profile</h1>
+    {{#editedRobot}}
+    <form class = "editRobotForm" action="/editrobot/{{id}}" method="POST">
+      <input type="text" name="name" value= "{{name}}">
+      <input type="text" name="email" value = "{{email}}">
+      <input type="text" name="university" value="{{university}}">
+      <input type="text" name="job" value="{{job}}">
+      <input type="text" name="company" value="{{company}}">
+      <input type="text" name="skills" value="{{skills}}">
+      <input type="text" name="phone" value="{{phone}}">
+      <input type="text" name="avatar" value="{{avatar}}">
+      <input type="text" name="address" value="{{address.city}} {{address.country}}">  
+      <hr>
+      <input type="submit" name="" value="Submit your edits to your profile!">
+      <hr>
+      {{/editedRobot}}
+      <a href = "http://localhost:3000/robots">Return to home page</a>
+    </form>
+  </body>
+</html>

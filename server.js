@@ -29,13 +29,13 @@ app.get('/robotDetail', function (req, res){
     res.render('robotDetail')
 })
 
-app.get('/_robot/:id', function (req, res) {
+app.get('/robot/:id', function (req, res) {
     const chosenRobot = dal.getRobot(req.params.id)
-      res.render('robotDetail', chosenRobot)
+      res.render('robotDetails', chosenRobot)
 })
 
-app.post('/_robot/:id', function (req, res){
-    res.redirect('./_robot/{{id}}')
+app.post('/robot/:id', function (req, res){
+    res.redirect('./robot/{{id}}')
 })
 
 app.post('/robots', function(req, res){
