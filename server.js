@@ -71,6 +71,15 @@ app.post('/login', (req, res) => {
     })
   // })
 
+  app.get('/register', (req, res) => {
+    res.render('register')
+  })
+
+  app.post('/register', (req, res) => {
+    dal.addRobot(req.body)
+    res.redirect('/robots')
+  })
+
 app.get('/editrobot/:id', function (req, res){
     const editedRobot = dal.getRobot(req.params.id)
     res.render('editrobot', {editedRobot})
