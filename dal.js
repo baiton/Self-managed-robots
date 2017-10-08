@@ -10,15 +10,25 @@ mongoose.connect(url, {
 })
 
 
-function getAllDocs (err, db) {
-  let collection = db.collection('users')
-  let documents = []
-  console.log(collection);
-  collection.find({}).toArray(function (err, docs) {
-    robots = docs
-    db.close()
-  })
+// function getAllDocs (err, db) {
+//   let collection = db.collection('users')
+//   let documents = []
+//   console.log("This is my collection", collection);
+//   collection.find({}).toArray(function (err, docs) {
+//     robots = docs
+//     db.close()
+//   })
+// }
+
+function connectMongodb (url, cb) {
+  MongoClient.connect(url, cb)
 }
+
+function getRobots () {
+  connectMongodb(url, getAllDocs)
+  return robots;
+}
+
 
 function getRobot (robotId) {
     connectMongodb(url, getAllDocs)
@@ -36,7 +46,7 @@ function getAllRobots () {
       collection.find({}).toArray(function (err, docs) {
         robots = docs
         console.log("robots", robots);
-        //this is logging but the information isn't passing to display on page
+        // this is logging but the information isn't passing to display on page
         resolve(robots)
         reject(err)
       })
@@ -46,18 +56,10 @@ function getAllRobots () {
 
 // Use connect method to connect to the server
 
-function connectMongodb (url, cb) {
-  MongoClient.connect(url, cb)
-}
-
-function getRobots () {
-  connectMongodb(url, getAllDocs)
-  return robots;
-}
 
 function addRobot (name, email, university, job, company, skills, phone, avatar, username, password){
   const robo = Robots.create({name: name, university: university, job: job, company: company, skills: skills, phone: phone, avatar: avatar, username: username, password: password}, function (err, Robots){
-    robo.save()
+    Robots.save()
   })
 }
 

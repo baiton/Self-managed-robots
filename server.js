@@ -19,28 +19,41 @@ app.get('/', function (req, res){
     res.redirect('./login')
 })
 
+app.post('/login', (req, res) => {
+    Robots.findOne({ username: req.body.username }, 'username password', function (err, user, next) {
+      if (err) return next(err)
+      if (!user) {
+        // console.log("user", user);
+        return res.redirect("./login")
+      }
+      // user.comparePassword(req.body.password, user.password, ( err, isMatch ) => {
+      //   if (!isMatch) {
+      //     console.log("password is incorrect");
+      //     return res.redirect("./login")
+      //   }
+        // let token = { token: createToken(user)};
+        // console.log("You made it!");
+        res.redirect('/robots');
+      })
+    })
+  // })
+
+
 app.get('/robots', function(req, res) {
+  // console.log("dal.getRobots", dal.getRobots());
     const robots = dal.getRobots()
 // getAllRobots does provide response as an array of robots... but how do I use them
     res.render('robots', { robots })
 })
 
-app.get('/robotDetail', function (req, res){
-    res.render('robotDetail')
-})
-
-app.get('/robot/:id', function (req, res) {
-    const chosenRobot = dal.getRobot(req.params.id)
+app.get('/robot/:_id', function (req, res) {
+    const chosenRobot = dal.getRobot(req.params._id)
       res.render('robotDetails', chosenRobot)
-})
-
-app.post('/robot/:id', function (req, res){
-    res.redirect('./robot/{{id}}')
 })
 
 app.post('/robots', function(req, res){
     dal.addRobot(req.body.name, req.body.email, req.body.university, req.body.job, req.body.company, req.body.skills, req.body.phone, req.body.avatar, req.body.username, req.body.password);
-    console.log(req.body.password)
+    // console.log(req.body.password)
     res.redirect('./robots')
 })
 
@@ -52,24 +65,6 @@ app.get('/login', function(req, res){
     res.render('login')
   })
 
-app.post('/login', (req, res) => {
-    Robots.findOne({ username: req.body.username }, 'username password', function (err, user, next) {
-      if (err) return next(err)
-      if (!user) {
-        console.log("user", user);
-        return res.redirect("./login")
-      }
-      // user.comparePassword(req.body.password, user.password, ( err, isMatch ) => {
-      //   if (!isMatch) {
-      //     console.log("password is incorrect");
-      //     return res.redirect("./login")
-      //   }
-        // let token = { token: createToken(user)};
-        console.log("You made it!");
-        res.redirect('/robots');
-      })
-    })
-  // })
 
   app.get('/register', (req, res) => {
     res.render('register')
@@ -80,13 +75,15 @@ app.post('/login', (req, res) => {
     res.redirect('/robots')
   })
 
-app.get('/editrobot/:id', function (req, res){
-    const editedRobot = dal.getRobot(req.params.id)
-    res.render('editrobot', {editedRobot})
+app.get('/editrobot/:_id', function (req, res){
+  const chosenRobot = dal.getRobot(req.params._id)
+  console.log(req.params._id);
+    // const editedRobot = dal.getRobot(req.params._id)
+    res.render('editrobot', chosenRobot)
 })
 
-app.post('/editrobot/:id', (req, res) => {
-    const id = req.params.id
+app.post('/editrobot/:_id', (req, res) => {
+    const id = req.params._id
     const newRobot = (req.body)
     dal.editRobot(id, newRobot)
     res.redirect('/robots')

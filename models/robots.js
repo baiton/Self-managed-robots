@@ -51,7 +51,6 @@ robotSchema.statics.findByName = function (name, cb) {
   }
 
 const Robots = mongoose.model('users', robotSchema)
-
 module.exports = Robots
 
 // collection: users

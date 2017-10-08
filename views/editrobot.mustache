@@ -6,7 +6,7 @@
   <body>
     <h1>Edit your Profile</h1>
     {{#editedRobot}}
-    <form class = "editRobotForm" action="/editrobot/{{id}}" method="POST">
+    <form class = "editRobotForm" action="/editrobot/{{_id}}" method="POST">
       <input type="text" name="name" value= "{{name}}">
       <input type="text" name="email" value = "{{email}}">
       <input type="text" name="university" value="{{university}}">
@@ -15,7 +15,7 @@
       <input type="text" name="skills" value="{{skills}}">
       <input type="text" name="phone" value="{{phone}}">
       <input type="text" name="avatar" value="{{avatar}}">
-      <input type="text" name="address" value="{{address.city}} {{address.country}}">  
+      <input type="text" name="address" value="{{address.city}} {{address.country}}">
       <hr>
       <input type="submit" name="" value="Submit your edits to your profile!">
       <hr>
