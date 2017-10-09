@@ -10,15 +10,15 @@ mongoose.connect(url, {
 })
 
 
-// function getAllDocs (err, db) {
-//   let collection = db.collection('users')
-//   let documents = []
-//   console.log("This is my collection", collection);
-//   collection.find({}).toArray(function (err, docs) {
-//     robots = docs
-//     db.close()
-//   })
-// }
+function getAllDocs (err, db) {
+  let collection = db.collection('users')
+  let documents = []
+  console.log("This is my collection", collection);
+  collection.find({}).toArray(function (err, docs) {
+    robots = docs
+    db.close()
+  })
+}
 
 function connectMongodb (url, cb) {
   MongoClient.connect(url, cb)
@@ -33,7 +33,7 @@ function getRobots () {
 function getRobot (robotId) {
     connectMongodb(url, getAllDocs)
     for (let i = 0; i < robots.length; i++){
-      if (robots[i].id == robotId) {
+      if (robots[i]._id == robotId) {
         return robots[i]
       }
     }
@@ -69,10 +69,11 @@ function getRobotById(robotId){
 }
 
 function editRobot(id, updatedRobot){
-  return Robots.findOneAndUpdate( {'_id': id}, updatedRobot, {upsert: true}, function(err, doc){
-    console.log("from editRobot dal method")
-  })
-}
+  return Robots.findOneAndUpdate( {'_id':id}, updatedRobot, {upsert: true}, function(err, doc){
+      if(err) return console.log(err)
+      console.log("from editRobot dal method", doc)
+    })
+  }
 
 function logout(logout){
   logout.destroy();

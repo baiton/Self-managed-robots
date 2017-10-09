@@ -48,6 +48,7 @@ app.get('/robots', function(req, res) {
 
 app.get('/robot/:_id', function (req, res) {
     const chosenRobot = dal.getRobot(req.params._id)
+    console.log("chosenRobot", chosenRobot);
       res.render('robotDetails', chosenRobot)
 })
 
@@ -84,10 +85,20 @@ app.get('/editrobot/:_id', function (req, res){
 
 app.post('/editrobot/:_id', (req, res) => {
     const id = req.params._id
-    const newRobot = (req.body)
+    const {name, email, university, job, company, skills, phone, avatar} = req.body
+    const newRobot = Object.assign({}, {
+      name,
+      email,
+      university,
+      job,
+      company,
+      skills,
+      phone,
+      avatar,
+      address: []
+    })
     dal.editRobot(id, newRobot)
     res.redirect('/robots')
-    console.log(newRobot)
 })
 
 app.listen(3000, function(){

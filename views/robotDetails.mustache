@@ -13,10 +13,10 @@
   <div class="top-row">
     <img id="circle-photo" src="{{avatar}}" alt="">
     <section class="primary-stats">
-      <h1>{{name}}</h1>
-      <p>{{address.city}}, {{address.country}} | {{job}} {{company}}{{^company}}Available for Hire{{/company}}
+      <h1>{{chosenRobot.name}}</h1>
+      <p>{{chosenRobot.address.city}}, {{chosenRobot.address.country}} | {{chosenRobot.job}} {{chosenRobot.company}}{{^company}}Available for Hire{{/company}}
       </p>
-      <p>{{email}} | {{phone}}</p>
+      <p>{{chosenRobot.email}} | {{chosenRobot.phone}}</p>
     </section>
   </div>
   <div class="bottom-stats">
@@ -37,7 +37,7 @@
       </ul>
     </article>
   </div>
-  <a href="/editrobot/{{_id}}"><button type="button" name="button">Edit</button></a>
+  <a href="/editrobot/{{_id}}">Edit</a>
 </body>
 
 </html>
